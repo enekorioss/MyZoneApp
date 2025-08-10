@@ -1,0 +1,42 @@
+import { Resend } from 'resend';
+
+// El código que se encarga de enviar el correo electrónico.
+// Cuando tu página web "llama" a esta URL, este código se ejecuta.
+
+// La clave secreta para conectar con Resend.
+// Por seguridad, Vercel la guarda en un lugar seguro.
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+export default async function (request) {
+    // Si la solicitud no es un POST, devolvemos un error.
+    if (request.method !== 'POST') {
+        return new Response('Método no permitido', { status: 405 });
+    }
+
+    try {
+        // Inicializamos el servicio de Resend con tu clave secreta.
+        const resend = new Resend(RESEND_API_KEY);
+
+        // Enviamos el correo electrónico con los datos que tú decidas.
+        const { data, error } = await resend.emails.send({
+            from: 'Tu Nombre <onboarding@resend.dev>', // Este es el correo que verán los usuarios.
+            to: ['destino@ejemplo.com'], // Aquí va el correo de la persona que recibirá la oferta.
+            subject: '¡Oferta especial para ti!',
+            html: '<h1>¡Hola! Aquí tienes una oferta exclusiva de nuestro servicio.</h1>',
+        });
+
+        if (error) {
+            // Si hay un error, lo registramos y le decimos a tu página web que algo falló.
+            console.error(error);
+            return new Response('Error al enviar el correo', { status: 500 });
+        }
+
+        // Si todo sale bien, le decimos a tu página web que el correo se ha enviado.
+        return new Response('Correo enviado correctamente');
+
+    } catch (error) {
+        // Si hay un error inesperado, lo capturamos.
+        console.error(error);
+        return new Response('Error interno del servidor', { status: 500 });
+    }
+}
