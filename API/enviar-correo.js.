@@ -1,42 +1,43 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-// El código que se encarga de enviar el correo electrónico.
-// Cuando tu página web "llama" a esta URL, este código se ejecuta.
+export default async function handler(req, res) {
+  // Asegúrate de que solo se acepten solicitudes POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Método no permitido' });
+  }
 
-// La clave secreta para conectar con Resend.
-// Por seguridad, Vercel la guarda en un lugar seguro.
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-
-export default async function (request) {
-    // Si la solicitud no es un POST, devolvemos un error.
-    if (request.method !== 'POST') {
-        return new Response('Método no permitido', { status: 405 });
+  // Configura el transportador de correo electrónico
+  const transporter = nodemailer.createTransport({
+    // Utiliza variables de entorno para la seguridad
+    // Por ejemplo, para Gmail, puedes usar:
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // Tu dirección de correo electrónico
+      pass: process.env.EMAIL_PASS  // La contraseña o contraseña de aplicación
     }
+  });
 
-    try {
-        // Inicializamos el servicio de Resend con tu clave secreta.
-        const resend = new Resend(RESEND_API_KEY);
+  // Configura los detalles del correo electrónico
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'tu_correo@ejemplo.com', // Cambia esto por el correo electrónico de destino
+    subject: 'Nueva Compra en My Zone',
+    html: `
+      <h2>¡Felicidades! Se ha realizado una nueva compra.</h2>
+      <p>Un usuario acaba de comprar un producto en tu tienda My Zone.</p>
+      <p>¡Revisa los detalles y prepárate para enviar el acceso!</p>
+    `
+  };
 
-        // Enviamos el correo electrónico con los datos que tú decidas.
-        const { data, error } = await resend.emails.send({
-            from: 'Tu Nombre <onboarding@resend.dev>', // Este es el correo que verán los usuarios.
-            to: ['destino@ejemplo.com'], // Aquí va el correo de la persona que recibirá la oferta.
-            subject: '¡Oferta especial para ti!',
-            html: '<h1>¡Hola! Aquí tienes una oferta exclusiva de nuestro servicio.</h1>',
-        });
-
-        if (error) {
-            // Si hay un error, lo registramos y le decimos a tu página web que algo falló.
-            console.error(error);
-            return new Response('Error al enviar el correo', { status: 500 });
-        }
-
-        // Si todo sale bien, le decimos a tu página web que el correo se ha enviado.
-        return new Response('Correo enviado correctamente');
-
-    } catch (error) {
-        // Si hay un error inesperado, lo capturamos.
-        console.error(error);
-        return new Response('Error interno del servidor', { status: 500 });
-    }
+  try {
+    // Envía el correo electrónico
+    await transporter.sendMail(mailOptions);
+    // Devuelve una respuesta exitosa
+    res.status(200).json({ message: 'Correo enviado con éxito' });
+  } catch (error) {
+    // Maneja errores y devuelve una respuesta de error
+    console.error('Error al enviar el correo:', error);
+    res.status(500).json({ message: 'Error al enviar el correo' });
+  }
 }
+
