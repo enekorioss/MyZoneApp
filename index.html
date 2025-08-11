@@ -385,4 +385,285 @@
           price: 15.00, originalPrice: 89.99, simulatedSales: 3,
           image: 'https://placehold.co/400x200/1e40af/white?text=Disney%2B',
           reviews: [
+              { rating: 4, comment: 'El servicio es muy bueno, pero me gustaría que la oferta durara más.', author: 'Wi    /* Estilos para la tarjeta de oferta flash */
+    @keyframes flash-glow {
+        0% { box-shadow: 0 0 5px 2px rgba(251, 113, 133, 0.5); }
+        50% { box-shadow: 0 0 20px 8px rgba(251, 113, 133, 0.8); }
+        100% { box-shadow: 0 0 5px 2px rgba(251, 113, 133, 0.5); }
+    }
+    .flash-offer-card {
+        animation: flash-glow 2s infinite;
+        border: 2px solid #f87171;
+    }
+    
+    /* Badge de oferta flash más grande y con animación */
+    @keyframes pulse-flash-badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    .flash-offer-badge {
+        animation: pulse-flash-badge 1.5s infinite;
+        font-size: 0.875rem; /* text-sm */
+        padding: 0.5rem 1rem; /* p-2 p-4 */
+        border-radius: 9999px; /* rounded-full */
+        background-color: #f87171; /* bg-red-400 */
+        color: white;
+    }
+
+    /* Estilo para la tarjeta de oferta flash en la página de ofertas */
+    .offer-card.flash-offer-card-bg {
+        background: linear-gradient(135deg, #f87171, #be123c);
+        border: 2px solid #fca5a5;
+        box-shadow: 0 0 25px rgba(251, 113, 133, 0.5);
+    }
+    .offer-card.flash-offer-card-bg .offer-price {
+        color: #ffedd5; /* Color más claro para el precio */
+    }
+
+    /* ESTILOS PARA LA SECCIÓN DE BIENVENIDA */
+    .hero-title {
+      font-size: clamp(2rem, 8vw, 5rem);
+      line-height: 1.1;
+      font-weight: 900;
+      background: linear-gradient(45deg, #06b6d4, #22d3ee, #be123c, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 200%;
+      animation: gradient-flow 6s ease infinite;
+    }
+    @keyframes gradient-flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .welcome-container {
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    /* ESTILOS PARA OCULTAR EL ENCABEZADO Y EL SCROLL INICIALMENTE */
+    body.welcome-active {
+        overflow-y: hidden;
+    }
+    body.welcome-active #main-header {
+        opacity: 0;
+        transform: translateY(-100%);
+        visibility: hidden;
+    }
+    header {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    /* ICONO DE BIENVENIDA ANIMADO */
+    @keyframes bounce-icon {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.1); }
+    }
+    .welcome-icon {
+        animation: bounce-icon 2s ease-in-out infinite;
+    }
+
+    /* Estilos para el icono de campana con badge */
+    /* ELIMINADO: Esta sección de estilos ha sido eliminada */
+  </style>
+</head>
+<body class="bg-zinc-900 text-gray-200 antialiased flex flex-col welcome-active">
+
+  <header id="main-header" class="bg-black/30 backdrop-blur-sm sticky top-0 z-20 shadow-lg shadow-cyan-500/5">
+    <div class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
+      <h1 class="text-2xl sm:text-3xl font-black tracking-wider text-white title-shine truncate flex-grow text-center sm:text-left min-w-0">My Zone</h1>
+      <nav role="navigation" class="items-center justify-center sm:justify-end gap-2 md:gap-4 flex-wrap flex-shrink-0 mt-2 sm:mt-0 flex">
+        <a href="#apps" class="nav-link text-sm md:text-base font-semibold text-gray-300 hover:text-cyan-400 transition-colors" data-section="apps">Apps</a>
+        <a href="#cuentas" class="nav-link text-sm md:text-base font-semibold text-gray-300 hover:text-cyan-400 transition-colors" data-section="cuentas">Cuentas</a>
+        <a href="#ofertas" id="offers-nav-link" class="nav-link text-sm md:text-base font-semibold text-white bg-cyan-600 hover:bg-cyan-700 px-3 py-1.5 rounded-lg transition-colors" data-section="ofertas">
+            Ofertas
+        </a>
+        <a href="#flash-ofertas" id="flash-offers-nav-link" class="nav-link text-sm md:text-base font-semibold text-white bg-rose-600 hover:bg-rose-700 px-3 py-1.5 rounded-lg transition-colors" data-section="flash-ofertas">
+             🔥 Oferta Flash
+        </a>
+        <button id="simulate-event-btn" class="hidden md:block text-xs md:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition-colors">
+            Simular Evento
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 md:py-12 flex-grow">
+    
+    <section id="welcome-section" class="welcome-container fixed inset-0 flex flex-col items-center justify-center p-4 z-30 bg-zinc-900 text-center transition-all duration-500">
+        <div class="welcome-icon text-cyan-400 mb-6" style="width: 80px; height: 80px;">
+             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <h1 class="hero-title font-black mb-4">
+            My Zone: Tu Puerta de Acceso a Ofertas Exclusivas
+        </h1>
+        <p class="text-xl md:text-2xl text-zinc-400 max-w-3xl mb-8 font-semibold">
+            Bienvenido a la plataforma donde la **innovación** se encuentra con los **precios imbatibles**. Explora un catálogo selecto de aplicaciones y cuentas premium con descuentos inigualables.
+        </p>
+        <button id="start-Browse-btn" class="px-8 py-4 rounded-full text-lg font-bold text-zinc-900 bg-cyan-400 hover:bg-cyan-300 transition-all transform hover:scale-105 cta-button-anim">
+            Comienza a Explorar
+        </button>
+    </section>
+
+    <section id="general-products-section" class="hidden">
+      <h2 class="text-2xl md:text-3xl font-bold text-white mb-8">Todos nuestros productos</h2>
+      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          </div>
+      <p id="no-results" class="text-center text-zinc-400 hidden">No se encontraron productos que coincidan con tu búsqueda.</p>
+    </section>
+
+    <section id="regular-offers-page" class="hidden">
+      <div class="p-6 md:p-8 bg-zinc-900 rounded-2xl">
+          <h2 class="text-3xl md:text-4xl font-black text-white flex items-center gap-2 mb-6">
+              Ofertas de la semana
+          </h2>
+          <div id="regular-offers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              </div>
+          <p id="no-regular-offers-message" class="text-center text-zinc-400 mt-4 hidden">No hay ofertas activas en este momento.</p>
+      </div>
+    </section>
+
+    <section id="flash-offers-page" class="hidden">
+      <div class="p-6 md:p-8 bg-zinc-900 rounded-2xl">
+          <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+              <h2 class="text-3xl md:text-4xl font-black text-white flex items-center gap-2">
+                  🔥 Ofertas Relámpago 🔥
+              </h2>
+              <div class="mt-4 md:mt-0 flex items-center gap-2">
+                  <p class="text-lg text-rose-400 font-semibold">Termina en:</p>
+                  <div id="countdown-timer" class="flex items-center gap-1 text-2xl font-mono text-white bg-red-600 px-3 py-1 rounded-lg">
+                      <span>00</span>:<span>00</span>:<span>00</span>
+                  </div>
+              </div>
+          </div>
+          <div id="flash-offers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              </div>
+          <p id="no-flash-offers-message" class="text-center text-zinc-400 mt-4 hidden">No hay ofertas relámpago activas en este momento.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-zinc-900/50 border-t border-zinc-800 text-center py-6 hidden">
+    <p class="text-zinc-500 text-sm">
+      <a href="#" class="text-cyan-500 hover:underline">Política de Privacidad</a> | © 2025 My Zone
+    </p>
+  </footer>
+
+  <template id="product-card-template">
+    <div class="card bg-zinc-800/50 border border-zinc-700 rounded-2xl p-5 flex flex-col transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/20 cursor-pointer relative overflow-hidden">
+      <div class="product-featured-banner hidden absolute top-4 -right-10 bg-amber-400 text-zinc-900 font-bold text-xs px-10 py-1 transform rotate-45">DESTACADO</div>
+      <img class="product-image w-full h-48 object-contain rounded-lg mb-4 bg-zinc-800" src="" alt="" loading="lazy">
+      <div class="flex-grow flex flex-col">
+        <h3 class="product-name text-xl font-bold text-white mb-2"></h3>
+        <div class="flex items-center justify-between mb-4">
+            <div class="product-offer bg-cyan-400/10 text-cyan-300 text-xs font-bold px-3 py-1 rounded-full hidden"></div>
+            <div class="product-sales-counter text-xs text-green-400 font-semibold bg-green-900/40 px-2 py-0.5 rounded-full hidden"></div>
+            </div>
+        <div class="flex items-center gap-2 mb-2">
+            <div class="star-rating read-only flex gap-1 text-yellow-400 text-base"></div>
+            <span class="review-count text-zinc-400 text-sm">(0)</span>
+        </div>
+        <div class="flex items-baseline gap-3 mt-auto pt-4">
+            <p class="product-price text-3xl font-bold text-cyan-400"></p>
+            <p class="product-original-price text-lg text-zinc-500 line-through"></p>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <template id="offer-card-template">
+      <div class="offer-card bg-zinc-700/50 rounded-2xl p-6 flex flex-col transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+          <img class="offer-image w-full h-36 object-contain rounded-lg bg-zinc-800 flex-shrink-0 mb-4" src="" alt="" loading="lazy">
+          <div class="flex-grow flex flex-col items-center text-center">
+              <h3 class="offer-name text-xl font-bold text-white mb-2"></h3>
+              <div class="flex items-baseline gap-2 mb-2">
+                  <p class="offer-price text-4xl font-black text-rose-400"></p>
+                  <p class="offer-original-price text-lg text-zinc-400 line-through"></p>
+              </div>
+              <div class="offer-discount bg-red-600 font-bold text-white px-3 py-1 rounded-full text-sm offer-banner inline-block mb-4"></div>
+          </div>
+          <button class="buy-offer-btn shiny-btn text-zinc-900 font-bold px-4 py-3 rounded-lg w-full mt-auto">
+              ¡Comprar ya!
+          </button>
+      </div>
+  </template>
+  
+  <div id="product-modal" class="modal-backdrop fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-30 opacity-0 pointer-events-none">
+    <div class="modal-content bg-zinc-800 rounded-2xl shadow-2xl shadow-cyan-900/50 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0">
+        </div>
+  </div>
+
+  <div id="reviews-modal" class="modal-backdrop fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-40 opacity-0 pointer-events-none">
+    <div class="modal-content bg-zinc-900 rounded-2xl shadow-2xl shadow-cyan-900/50 w-full max-w-3xl max-h-[95vh] overflow-y-auto transform scale-95 opacity-0">
+      <div id="reviews-modal-content" class="p-4 md:p-6">
+        </div>
+    </div>
+  </div>
+  
+  <div id="review-form-modal" class="modal-backdrop fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+    <div class="modal-content bg-zinc-900 rounded-2xl shadow-2xl shadow-cyan-900/50 w-full max-w-lg transform scale-95 opacity-0">
+        <div id="review-form-modal-content" class="p-4 md:p-6">
+            </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg text-white font-semibold transition-all duration-500 opacity-0 translate-y-10 pointer-events-none z-40">
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // --- DATOS INICIALES (hardcoded) ---
+      // Los datos ahora se almacenan como un array plano para facilitar la manipulación.
+      const initialProducts = [
+        {
+          id: 'spotify-mod', name: 'Spotify Premium Mod', featured: true, type: 'apps',
+          description: 'Disfruta de música sin anuncios y saltos ilimitados. Accede a tu contenido favorito sin interrupciones.',
+          price: 3.00, originalPrice: 3.00, simulatedSales: 15,
+          image: 'https://i.ibb.co/XyD8Pz8/spotify-premium-mod.jpg',
+          reviews: [
+              { rating: 5, comment: 'Funciona genial, me encanta poder escuchar música sin anuncios.', author: 'Serena L.', userImage: 'https://placehold.co/48x48/10b981/ffffff?text=SL' },
+              { rating: 4, comment: 'Muy buen precio para las funciones que ofrece, pero a veces tarda en cargar.', author: 'Liam K.', userImage: 'https://placehold.co/48x48/4338ca/ffffff?text=LK' },
+              { rating: 5, comment: '¡Increíble! La mejor compra que he hecho para mi música. ¡Funciona perfecto!', author: 'Aurora G.', userImage: 'https://placehold.co/48x48/d97706/ffffff?text=AG' }
+          ]
+        },
+        {
+          id: 'youtube-premium', name: 'YouTube Premium', featured: true, type: 'apps',
+          description: 'Videos sin anuncios, reproducción en segundo plano y acceso a YouTube Music. Una experiencia de visualización ininterrumpida en todos tus dispositivos.',
+          price: 4.50, originalPrice: 12.00, simulatedSales: 8,
+          image: 'https://placehold.co/400x200/ef4444/white?text=YouTube',
+          reviews: [
+              { rating: 5, comment: 'La mejor forma de ver YouTube sin interrupciones.', author: 'Alia V.', userImage: 'https://placehold.co/48x48/0d9488/ffffff?text=AV' },
+              { rating: 5, comment: 'Precio inmejorable. Lo recomiendo al 100%.', author: 'Draco M.', userImage: 'https://placehold.co/48x48/1d4ed8/ffffff?text=DM' },
+              { rating: 4, comment: 'Funciona muy bien en mi móvil y tablet, aunque a veces falla en la tele. Buena compra.', author: 'Nox P.', userImage: 'https://placehold.co/48x48/a21caf/ffffff?text=NP' }
+          ]
+        },
+        {
+          id: 'netflix-premium', name: 'Netflix Premium', type: 'apps',
+          description: 'Acceso a una cuenta de Netflix Premium con la mejor calidad de vídeo y 4K UHD. Disfruta de series y películas sin límites.',
+          price: 10.00, originalPrice: 20.00, simulatedSales: 0,
+          image: 'https://placehold.co/400x200/e50914/white?text=Netflix',
+          reviews: [
+              { rating: 3, comment: 'La calidad es buena, pero tardaron un día en darme el acceso.', author: 'Astrid D.', userImage: 'https://placehold.co/48x48/e50914/ffffff?text=AD' },
+              { rating: 5, comment: 'El servicio al cliente resolvió mi problema de acceso rápidamente. Muy contenta.', author: 'Zane L.', userImage: 'https://placehold.co/48x48/000000/ffffff?text=ZL' }
+          ]
+        },
+        {
+          id: 'last-day-on-earth', name: 'Cuenta Last Day On Earth', featured: true, type: 'cuentas',
+          description: 'Acceso completo con nivel avanzado, recursos ilimitados y beneficios exclusivos en el juego. Empieza a jugar como un profesional desde el primer día.',
+          price: 2.99, originalPrice: 5.00, simulatedSales: 22,
+          image: 'https://i.ibb.co/Zp97qWTr/last-day-on-earth-premium.jpg',
+          reviews: [
+              { rating: 5, comment: '¡Increíble! Ahorré mucho tiempo de farmeo. La cuenta es brutal.', author: 'Jaxon S.', userImage: 'https://placehold.co/48x48/0f766e/ffffff?text=JS' },
+              { rating: 5, comment: 'La cuenta tenía todos los recursos que prometían. Fantástico.', author: 'Ember M.', userImage: 'https://placehold.co/48x48/f97316/ffffff?text=EM' },
+              { rating: 4, comment: 'Muy buena cuenta, pero me gustaría que el precio fuera un poco más bajo.', author: 'Orion V.', userImage: 'https://placehold.co/48x48/65a30d/ffffff?text=OV' }
+          ]
+        },
+         {
+          id: 'disney-plus', name: 'Cuenta Disney+', type: 'cuentas',
+          description: 'Acceso a una cuenta de Disney+ por 1 año. Disfruta de todo el catálogo de Disney, Pixar, Marvel, Star Wars y National Geographic sin límites.',
+          price: 15.00, originalPrice: 89.99, simulatedSales: 3,
+          image: 'https://placehold.co/400x200/1e40af/white?text=Disney%2B',
+          reviews: [
               { rating: 4, comment: 'El servicio es muy bueno, pero me gustaría que la oferta durara más.', author: 'Wi
